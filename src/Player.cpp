@@ -10,9 +10,8 @@
 #include <cstdlib>
 using namespace std;
 
-Player::Player(Board b, double * hypothesis, sym mode = X ){
+Player::Player(double * hypothesis, sym mode = X ){
 
-	this->board = b;
 	this->mode = mode;
 	this->updateConstant = 0.1;
 
@@ -20,17 +19,8 @@ Player::Player(Board b, double * hypothesis, sym mode = X ){
 		this->hypothesis[i] = hypothesis[i];
 }
 
-void Player::setConstant(double val){
-	this->updateConstant = val;
-}
+void Player::setConstant(double val){ this->updateConstant = val; }
 
-void Player::setBoard(Board b){
-	this->board = b;
-}
-
-Board Player::getBoard(){
-	return this->board;
-}
 
 void Player::setHypothesis(double * hypothesis){
 
@@ -38,9 +28,7 @@ void Player::setHypothesis(double * hypothesis){
 		this->hypothesis[i] = hypothesis[i];
 }
 
-double * Player::getHypothesis() {
-	return this->hypothesis;
-}
+double * Player::getHypothesis() { return this->hypothesis; }
 
 double Player::evalBoard(Board & b){
 
@@ -57,23 +45,20 @@ double Player::evalBoard(Board & b){
 	return val;
 }
 
-void Player::chooseRandom(){
+Board Player::chooseRandom(Board & b){
 
 	std::vector<Board> v;
-	this->board.getSuccessor(this->mode, v);
+	b.getSuccessor(this->mode, v);
 
 	srand(time(NULL));
-	Board cur = v[rand() % v.size()];
-
-	this->setBoard(cur);
-	this->history.push_back(cur);
+	return v[rand() % v.size()];
 
 }
 
-void Player::chooseMove(){
+Board Player::chooseMove(Board & b){
 
 	std::vector<Board> v;
-	this->board.getSuccessor(this->mode, v);
+	b.getSuccessor(this->mode, v);
 
 	Board bestBoard = v[0];
 	double bestValue = this->evalBoard(bestBoard);
@@ -85,9 +70,7 @@ void Player::chooseMove(){
 			bestBoard = v[i];
 		}
 	}
-	this->setBoard(bestBoard);
-	this->history.push_back(bestBoard);
-
+	return bestBoard;
 }
 
 

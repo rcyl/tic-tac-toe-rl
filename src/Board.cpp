@@ -35,6 +35,8 @@ void Board::set(sym s, int i, int j){
 
 	ecount--;
 }
+void Board::setBoard(Board b){	*this = b; }
+
 
 void Board::print() const {
 
@@ -127,9 +129,5 @@ void Board::getSuccessor(sym s,vector<Board> & v){
 			}
 		}
 	}
-}
-
-void Board::Foo(){
-
 }
 

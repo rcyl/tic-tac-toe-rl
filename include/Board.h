@@ -32,7 +32,7 @@ public:
 	bool isDone();
 	void getFeatures(int * feat);
 	void getSuccessor(sym s,std::vector<Board> & v);
-	void Foo();
+	void setBoard(Board b);
 
 };
 
