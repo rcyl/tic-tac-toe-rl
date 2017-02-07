@@ -18,7 +18,7 @@ int main(){
 
 	b.print();
 	b.set(X, 0, 0);
-	b.set(O, 0, 1);
+	b.set(X, 1, 1);
 	b.set(O, 0, 2);
 	b.print();
 	vector<Board> v;
