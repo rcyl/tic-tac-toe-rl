@@ -6,8 +6,11 @@
  */
 
 #include "Player.h"
+#include "Constants.h"
+#include <iostream>
 #include <ctime>
 #include <cstdlib>
+
 using namespace std;
 
 Player::Player(double * hypothesis, sym mode = X ){
@@ -15,7 +18,7 @@ Player::Player(double * hypothesis, sym mode = X ){
 	this->mode = mode;
 	this->updateConstant = 0.1;
 
-	for(int i = 0; i < NUMFEAT + 1; i++)
+	for(int i = 0; i < NUMFEAT; i++)
 		this->hypothesis[i] = hypothesis[i];
 }
 
@@ -24,7 +27,7 @@ void Player::setConstant(double val){ this->updateConstant = val; }
 
 void Player::setHypothesis(double * hypothesis){
 
-	for(int i = 0; i < NUMFEAT + 1; i++)
+	for(int i = 0; i < NUMFEAT; i++)
 		this->hypothesis[i] = hypothesis[i];
 }
 
@@ -38,9 +41,7 @@ double Player::evalBoard(Board & b){
 	b.getFeatures(features);
 
 	for(int i = 0; i < NUMFEAT; i++)
-		val += this->hypothesis[i + 1] * features[i];
-
-	val += this->hypothesis[0];
+		val += this->hypothesis[i] * features[i];
 
 	return val;
 }
@@ -71,6 +72,26 @@ Board Player::chooseMove(Board & b){
 		}
 	}
 	return bestBoard;
+}
+
+void Player::updateWeights(vector<Board> & history, vector<train_t> & train){
+
+	double vEst, vTrain, diff;
+	int * features;
+
+	for(unsigned int i = 0; i < history.size(); i++){
+
+		features = get<0>(train[i]);
+
+		vEst = this->evalBoard(history[i]);
+		vTrain = get<1>(train[i]);
+		diff = vTrain - vEst;
+
+		for(int j = 0; j < NUMFEAT; j++){
+			this->hypothesis[j] += this->updateConstant * diff * features[j];
+		}
+	}
+
 }
 
 

@@ -13,39 +13,38 @@
 
 using namespace std;
 
-Critic::Critic(sym mode, double * hypothesis){
+Critic::Critic(sym mode){
 
 	this->mode = mode;
-	for(int i = 0; i < NUMFEAT + 1; i++)
-		this->hypothesis[i] = hypothesis[i];
+	this->hypothesis[NUMFEAT] =  {};
 }
 
 vector<train_t> Critic::getTrainingExamples(vector<Board> & history){
 
 	vector<train_t> train;
 	int features[NUMFEAT] = {};
-	int cpy[NUMFEAT];
-	double tr_values;
 
+	double tr_values;
 	for(unsigned int i = 0; i < history.size(); i++){
-		fill(cpy, cpy + NUMFEAT, 0);
 		tr_values = 0;
 		history[i].getFeatures(features);
+
 		if (history[i].isDone()){
 			tr_values = getValues(history[i], this->mode);
+			this->updateTraining(features, tr_values, train);
 			break;
 		}
-		else if (i + 2 == history.size()){ //game played until end
+
+		else if (i + 2 >= history.size()){ //game played until end
 			tr_values = getValues(history[history.size()-1], this->mode);
-			break;
-		} else{
+			this->updateTraining(features, tr_values, train);
+		}
+		else{
 			tr_values = this->evalBoard(history[i+2]); // train value based on the move after current
+			this->updateTraining(features, tr_values, train);
 		}
 	}
 
-	copy(begin(features), end(features), begin(cpy)); //duplicating features
-	train_t example(cpy, tr_values);
-	train.push_back(example);
 	return train;
 }
 
@@ -57,11 +56,19 @@ double Critic::evalBoard(Board & b){
 	b.getFeatures(features);
 
 	for(int i = 0; i < NUMFEAT; i++)
-		val += this->hypothesis[i + 1] * features[i];
-
-	val += this->hypothesis[0];
+		val += this->hypothesis[i] * features[i];
 
 	return val;
+}
+
+void Critic::updateTraining(int * features, double tr_values, vector<train_t> & train){
+
+	int cpy[NUMFEAT];
+	for(int i = 0 ; i < NUMFEAT; i++)
+		cpy[i] = features[i];
+
+	train_t example(cpy, tr_values);
+	train.push_back(example);
 }
 
 double Critic::getValues(Board & b, sym mode){
@@ -71,5 +78,11 @@ double Critic::getValues(Board & b, sym mode){
 	if (b.getWinner() == !mode)
 		return -100.0;
 	return 0;
+}
 
+
+void Critic::setHypothesis(double * hypothesis){
+
+	for(int i = 0; i < NUMFEAT; i++)
+		this->hypothesis[i] = hypothesis[i];
 }

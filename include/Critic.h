@@ -11,10 +11,6 @@
 #include "Constants.h"
 #include "Board.h"
 #include <vector>
-#include <tuple>
-
-//tuple takes in array of features, and their training values
-typedef std::tuple<int *, double> train_t;
 
 class Critic{
 
@@ -23,10 +19,12 @@ private:
 	double hypothesis[NUMFEAT + 1];
 	double getValues(Board & b, sym mode);
 	double evalBoard(Board & b);
+	void updateTraining(int * features, double tr_values, std::vector<train_t> & train);
 
 public:
-	Critic(sym mode, double * hypothesis);
+	Critic(sym mode);
 	std::vector<train_t> getTrainingExamples(std::vector<Board> & history);
+	void setHypothesis(double * hypothesis);
 };
 
 

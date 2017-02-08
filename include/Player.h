@@ -27,7 +27,7 @@ public:
 	double evalBoard(Board & b);
 	Board chooseRandom(Board & b);
 	Board chooseMove(Board & b);
-	std::vector<int> foo();
+	void updateWeights(std::vector<Board> & history, std::vector<train_t> & train);
 
 };
 
