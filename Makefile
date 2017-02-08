@@ -3,7 +3,7 @@ OBJ := $(patsubst src/%.cpp, bin/%.o, $(SRC))
 INC := -Iinclude
 CC := g++
 LD_FLAGS := 
-CC_FLAGS := -Wall -g
+CC_FLAGS := -Wall -g -std=c++11
 OUT = main
 
 $(OUT): $(OBJ)

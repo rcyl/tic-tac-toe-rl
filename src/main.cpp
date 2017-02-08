@@ -8,9 +8,13 @@
 #include <iostream>
 #include "Board.h"
 #include <vector>
+#include <array>
+#include <tuple>
 #include "Constants.h"
 
 using namespace std;
+
+typedef tuple<int *, double> train;
 
 int main(){
 
@@ -53,17 +57,12 @@ int main(){
 //		h[i].print();
 //	}
 
-	vector<int *> arr;
+	int features[NUMFEAT] = {1,2,3,4,5,6};
 
-	int foo[2] = { 1, 2 };
+	train ex(features, 99.9);
 
-	arr.push_back(foo);
+	cout << get<0>(ex) << endl;
+	cout << get<1>(ex) << endl;
 
-	for(unsigned int i = 0; i < arr.size(); i++) {
-		int * temp;
-		temp = arr.at(i);
-		cout << temp[0] << endl;
-		cout << temp[1] << endl;
-	}
 
 }
