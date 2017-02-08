@@ -10,7 +10,6 @@
 #include "Constants.h"
 #include <iostream>
 #include <tuple>
-#include <cstdlib>
 
 using namespace std;
 
@@ -24,11 +23,12 @@ Critic::Critic(sym mode, double * hypothesis){
 vector<train_t> Critic::getTrainingExamples(vector<Board> & history){
 
 	vector<train_t> train;
-	int features[NUMFEAT];
+	int features[NUMFEAT] = {};
+	int cpy[NUMFEAT];
 	double tr_values;
 
 	for(unsigned int i = 0; i < history.size(); i++){
-		fill(features, features + NUMFEAT, 0);
+		fill(cpy, cpy + NUMFEAT, 0);
 		tr_values = 0;
 		history[i].getFeatures(features);
 		if (history[i].isDone()){
@@ -39,10 +39,12 @@ vector<train_t> Critic::getTrainingExamples(vector<Board> & history){
 			tr_values = getValues(history[history.size()-1], this->mode);
 			break;
 		} else{
-			tr_values = this->evalBoard(history[i+2]);
+			tr_values = this->evalBoard(history[i+2]); // train value based on the move after current
 		}
 	}
-	train_t example(features, tr_values);
+
+	copy(begin(features), end(features), begin(cpy)); //duplicating features
+	train_t example(cpy, tr_values);
 	train.push_back(example);
 	return train;
 }
@@ -63,6 +65,7 @@ double Critic::evalBoard(Board & b){
 }
 
 double Critic::getValues(Board & b, sym mode){
+
 	if (b.getWinner() == mode)
 		return 100.0;
 	if (b.getWinner() == !mode)

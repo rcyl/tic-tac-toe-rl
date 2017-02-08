@@ -58,11 +58,21 @@ int main(){
 //	}
 
 	int features[NUMFEAT] = {1,2,3,4,5,6};
+	int dest[NUMFEAT];
 
-	train ex(features, 99.9);
+	copy(begin(features), end(features), begin(dest));
 
-	cout << get<0>(ex) << endl;
-	cout << get<1>(ex) << endl;
+	train ex(dest, 99.9);
 
+	int * test = get<0>(ex) ;
+
+	for(int i = 0; i < NUMFEAT; i++)
+		cout << test[i] << endl;
+
+	features[0] = 412412;
+	features[1] = 512512;
+
+	for(int i = 0; i < NUMFEAT; i++)
+		cout << test[i] << endl;
 
 }

@@ -22,12 +22,11 @@ private:
 	sym mode;
 	double hypothesis[NUMFEAT + 1];
 	double getValues(Board & b, sym mode);
+	double evalBoard(Board & b);
 
 public:
 	Critic(sym mode, double * hypothesis);
 	std::vector<train_t> getTrainingExamples(std::vector<Board> & history);
-	double evalBoard(Board & b);
-
 };
 
 
