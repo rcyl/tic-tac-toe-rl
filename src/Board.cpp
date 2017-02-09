@@ -57,7 +57,6 @@ void Board::print() const {
 			cout << endl << "-- -- --" << endl;
 	}
 
-	cout << "num of moves is: " << this->moves << endl << endl;
 }
 
 sym Board::getWinner(){
@@ -108,25 +107,23 @@ void Board::countFeatures(int * row, int * features){
 
 	features[0] = 1;
 
-	if (row[O] == ROW) { //3Os
+	if (row[O] == ROW) //3Os
 		features[6]++;
-	}
-	else if (row[O] == ROW - 1 && row[X] == 0) { //2Os
-		features[2]++;
-	}
-	else if (row[O] == ROW - 2 && row[X] == 0){ //1O
-		features[4]++;
-	}
 
-	if (row[X] == ROW) { //3Xs
+	else if (row[O] == ROW - 1 && row[X] == 0) //2Os
+		features[2]++;
+
+	else if (row[O] == ROW - 2 && row[X] == 0) //1O
+		features[4]++;
+
+	if (row[X] == ROW) //3Xs
 		features[5]++;
-	}
-	else if (row[X] == ROW - 1 && row[O] == 0) { //2Xs
+
+	else if (row[X] == ROW - 1 && row[O] == 0) //2Xs
 		features[1]++;
-	}
-	else if (row[X] == ROW - 2 && row[O] == 0){ //1X
+
+	else if (row[X] == ROW - 2 && row[O] == 0) //1X
 		features[3]++;
-	}
 
 }
 

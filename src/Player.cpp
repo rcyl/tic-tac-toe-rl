@@ -31,14 +31,22 @@ void Player::setHypothesis(double * hypothesis){
 		this->hypothesis[i] = hypothesis[i];
 }
 
-double * Player::getHypothesis() { return this->hypothesis; }
-
 double Player::evalBoard(Board & b){
 
 	double val = 0;
 	int features[NUMFEAT] = {};
 
 	b.getFeatures(features);
+
+	for(int i = 0; i < NUMFEAT; i++)
+		val += this->hypothesis[i] * features[i];
+
+	return val;
+}
+
+double Player::evalBoard(Board & b, int * features){
+
+	double val = 0;
 
 	for(int i = 0; i < NUMFEAT; i++)
 		val += this->hypothesis[i] * features[i];
@@ -74,24 +82,55 @@ Board Player::chooseMove(Board & b){
 	return bestBoard;
 }
 
-void Player::updateWeights(vector<Board> & history, vector<train_t> & train){
+void Player::updateWeights(vector<Board> & history){
 
 	double vEst, vTrain, diff;
-	int * features;
+	int features[NUMFEAT] = {};
 
 	for(unsigned int i = 0; i < history.size(); i++){
 
-		features = get<0>(train[i]);
+		Board cur = history[i];
+		fill(features, features + NUMFEAT, 0);
+		cur.getFeatures(features);
+#ifdef DEBUG
+		cur.print();
+		cout << "printing features" << endl;
+		for(int i = 0; i < NUMFEAT; i++)
+			cout << "X" << i << ": " << features[i] << endl;
+		cout << endl;
+#endif
 
-		vEst = this->evalBoard(history[i]);
-		vTrain = get<1>(train[i]);
+		if (cur.isDone())
+			vTrain = this->getValues(cur, this->mode);
+		else if (i + 2 >= history.size())
+			vTrain = this->getValues(history.back(), this->mode);
+		else
+			vTrain = this->evalBoard(history[i + 2], features);
+
+		vEst = this->evalBoard(cur, features);
 		diff = vTrain - vEst;
 
 		for(int j = 0; j < NUMFEAT; j++){
 			this->hypothesis[j] += this->updateConstant * diff * features[j];
 		}
 	}
+}
 
+void Player::printHypothesis(){
+
+	cout << "printing hypothesis" << endl;
+	for(int i = 0; i < NUMFEAT; i++)
+		cout << this->hypothesis[i] << " ";
+	cout << endl;
+}
+
+double Player::getValues(Board & b, sym mode){
+
+	if (b.getWinner() == mode)
+		return 100.0;
+	if (b.getWinner() == !mode)
+		return -100.0;
+	return 0.0;
 }
 
 

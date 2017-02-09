@@ -8,28 +8,33 @@
 #include <iostream>
 #include "Board.h"
 #include "Player.h"
-#include "Critic.h"
 #include <vector>
 #include "Constants.h"
 
 using namespace std;
 
-int main(){
+int main(int argc, char * argv[]){
 
-	const int NUM_GAMES = 100000;
+	if (argc < 2) {
+		cout << "please enter number of training games" << endl;
+		return 0;
+	}
+	long num_games = atol(argv[1]);
 
 	vector<Board> history;
 	double hypO[NUMFEAT] = { 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
 	double hypX[NUMFEAT] = { 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
 	Player playerO(hypO, O);
 	Player playerX(hypX, X);
-	Critic criticO(O);
-	Critic criticX(X);
+	playerX.setConstant(0.4);
 	int winner[SYMNUM] = {};
 
-	for(int i = 0; i < NUM_GAMES; i++ ) {
+	/*training phase */
+
+	for(long i = 0; i < num_games; i++ ) {
 		Board b;
 		history.clear();
+		//playerO.printHypothesis();cl
 
 		while(!b.isDone()){
 			Board boardO = playerO.chooseMove(b);
@@ -54,17 +59,10 @@ int main(){
 #ifdef DEBUG
 		cout << "winner is " << win << endl;
 #endif
-		winner[(int)win]++;
+		winner[win]++;
 
-		double * htemp = playerO.getHypothesis();
-		criticO.setHypothesis(htemp);
-		htemp = playerX.getHypothesis();
-		criticX.setHypothesis(htemp);
-
-		vector<train_t> example = criticO.getTrainingExamples(history);
-		playerO.updateWeights(history, example);
-		example = criticX.getTrainingExamples(history);
-		playerX.updateWeights(history, example);
+		playerO.updateWeights(history);
+		playerX.updateWeights(history);
 
 	}
 
@@ -72,5 +70,34 @@ int main(){
 	cout << "X won " << winner[X] << " times" << endl;
 	cout << "Drew " << winner[E] << " times" << endl;
 
+	/* playing phase */
 
+//	Board b;
+//	int i, j;
+//
+//	playerO.printHypothesis();
+//
+//	while(!b.isDone()){
+//		cout << "my turn" << endl;
+//		b = playerO.chooseMove(b);
+//		b.print();
+//		if (b.isDone())
+//			break;
+//		cout << "enter i" << endl;
+//		cin >> i;
+//		cout << "enter j" << endl;
+//		cin >> j;
+//		b.set(X, i, j);
+//		b.print();
+//		if (b.isDone())
+//			break;
+//	}
+//	if (b.getWinner() == O)
+//		cout << "I win" << endl;
+//	else if (b.getWinner() == X)
+//		cout << "You win" << endl;
+//	else
+//		cout << "draw" << endl;
+
+	return 0;
 }

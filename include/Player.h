@@ -15,19 +15,22 @@
 class Player{
 
 private:
-	double hypothesis[NUMFEAT + 1]; //hypothesis has extra 1 param
+	double hypothesis[NUMFEAT]; //hypothesis has extra 1 param
 	sym mode;
 	double updateConstant;
+	double getValues(Board & b, sym mode);
+	double getTrainingValues(std::vector<Board> & history);
+	double evalBoard(Board & b);
+	double evalBoard(Board & b, int * features);
 
 public:
 	Player(double * hypothesis, sym mode);
 	void setConstant(double val);
 	void setHypothesis(double * hypothesis);
-	double * getHypothesis();
-	double evalBoard(Board & b);
 	Board chooseRandom(Board & b);
 	Board chooseMove(Board & b);
-	void updateWeights(std::vector<Board> & history, std::vector<train_t> & train);
+	void printHypothesis();
+	void updateWeights(std::vector<Board> & history);
 
 };
 

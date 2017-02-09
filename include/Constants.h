@@ -16,8 +16,6 @@ typedef enum {
 	E = 2
 } sym;
 
-//tuple takes in array of features, and their training values
-typedef std::tuple<int *, double> train_t;
 
 #define SYMNUM 3
 #define NUMFEAT 7 //technically only 6 features, 1st feature is always 1

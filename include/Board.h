@@ -31,7 +31,7 @@ public:
 	void set(sym s, int i, int j);
 	sym getWinner();
 	bool isDone();
-	void getFeatures(int * feat);
+	void getFeatures(int * features);
 	void getSuccessor(sym s,std::vector<Board> & v);
 	void setBoard(Board b);
 
