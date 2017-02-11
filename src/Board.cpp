@@ -36,8 +36,7 @@ void Board::set(sym s, int i, int j){
 	this->moves++;
 
 }
-void Board::setBoard(Board b){	*this = b; }
-
+//void Board::setBoard(Board b){	*this = b; }
 
 void Board::print() const {
 
@@ -94,7 +93,7 @@ void Board::getFeatures(int * features){
 	this->countFeatures(this->rdiag, features);
 }
 
-void Board::countFeatures(int * row, int * features){
+void Board::countFeatures(char * row, int * features){
 
 	/* x0 = 1 (always)
 	 * x1 = 2 Xs and empty

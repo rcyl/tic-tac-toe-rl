@@ -69,14 +69,15 @@ Board Player::chooseMove(Board & b){
 	std::vector<Board> v;
 	b.getSuccessor(this->mode, v);
 
-	Board bestBoard = v[0];
+	Board bestBoard = v.front();
 	double bestValue = this->evalBoard(bestBoard);
 
-	for(unsigned int i = 1; i < v.size(); i++){
-		double temp = this->evalBoard(v[i]);
+	double temp = 0;
+	for(Board b : v){
+		temp = this->evalBoard(b);
 		if (temp > bestValue){
 			bestValue = temp;
-			bestBoard = v[i];
+			bestBoard = b;
 		}
 	}
 	return bestBoard;
@@ -88,7 +89,6 @@ void Player::updateWeights(vector<Board> & history){
 	int features[NUMFEAT] = {};
 
 	for(unsigned int i = 0; i < history.size(); i++){
-
 		Board cur = history[i];
 		fill(features, features + NUMFEAT, 0);
 		cur.getFeatures(features);
@@ -114,6 +114,12 @@ void Player::updateWeights(vector<Board> & history){
 			this->hypothesis[j] += this->updateConstant * diff * features[j];
 		}
 	}
+}
+
+void Player::getHypothesis(double * hyp){
+
+	for(int i = 0; i < NUMFEAT; i++)
+		hyp[i] = this->hypothesis[i];
 }
 
 void Player::printHypothesis(){

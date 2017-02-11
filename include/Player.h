@@ -30,6 +30,7 @@ public:
 	Board chooseRandom(Board & b);
 	Board chooseMove(Board & b);
 	void printHypothesis();
+	void getHypothesis(double * hyp);
 	void updateWeights(std::vector<Board> & history);
 
 };

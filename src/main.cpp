@@ -6,9 +6,10 @@
  */
 
 #include <iostream>
+#include <vector>
+#include <fstream>
 #include "Board.h"
 #include "Player.h"
-#include <vector>
 #include "Constants.h"
 
 using namespace std;
@@ -22,10 +23,21 @@ int main(int argc, char * argv[]){
 	long num_games = atol(argv[1]);
 
 	vector<Board> history;
-	double hypO[NUMFEAT] = { 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
-	double hypX[NUMFEAT] = { 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
-	Player playerO(hypO, O);
-	Player playerX(hypX, X);
+	//double hyp[NUMFEAT] = { 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
+	double hyp[NUMFEAT] = {};
+
+	srand(time(NULL));
+	for(int i  = 0; i < NUMFEAT; i++){
+		hyp[i] = (rand() % 100) + 1;
+	}
+	cout << "random starting hypothesis" << endl;
+	for(double d : hyp){
+		cout << d << ",";
+	}
+	cout << endl;
+
+	Player playerO(hyp, O);
+	Player playerX(hyp, X);
 	playerX.setConstant(0.4);
 	int winner[SYMNUM] = {};
 
@@ -34,7 +46,7 @@ int main(int argc, char * argv[]){
 	for(long i = 0; i < num_games; i++ ) {
 		Board b;
 		history.clear();
-		//playerO.printHypothesis();cl
+		//playerO.printHypothesis();
 
 		while(!b.isDone()){
 			Board boardO = playerO.chooseMove(b);
@@ -70,34 +82,17 @@ int main(int argc, char * argv[]){
 	cout << "X won " << winner[X] << " times" << endl;
 	cout << "Drew " << winner[E] << " times" << endl;
 
-	/* playing phase */
+	playerO.getHypothesis(hyp);
 
-//	Board b;
-//	int i, j;
-//
-//	playerO.printHypothesis();
-//
-//	while(!b.isDone()){
-//		cout << "my turn" << endl;
-//		b = playerO.chooseMove(b);
-//		b.print();
-//		if (b.isDone())
-//			break;
-//		cout << "enter i" << endl;
-//		cin >> i;
-//		cout << "enter j" << endl;
-//		cin >> j;
-//		b.set(X, i, j);
-//		b.print();
-//		if (b.isDone())
-//			break;
-//	}
-//	if (b.getWinner() == O)
-//		cout << "I win" << endl;
-//	else if (b.getWinner() == X)
-//		cout << "You win" << endl;
-//	else
-//		cout << "draw" << endl;
+	for(double d : hyp)
+		cout << d << ",";
+	cout << endl;
 
-	return 0;
+	ofstream f("hypothesis.txt");
+	if (f.is_open()){
+		for(double d : hyp)
+			f << d << " ";
+		f.close();
+	}
+
 }

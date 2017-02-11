@@ -18,12 +18,12 @@ class Board{
 
 private:
 	sym board[ROW][COL];
-	int row[ROW][SYMNUM-1]; //row 0, 1, 2, followed by num of symbols in row,col,diag
-	int col[COL][SYMNUM-1]; // see above
-	int diag[SYMNUM-1];
-	int rdiag[SYMNUM-1];
-	void countFeatures(int * row, int * features);
-	int moves;
+	char row[ROW][SYMNUM-1] = {}; //row 0, 1, 2, followed by num of symbols in row,col,diag
+	char col[COL][SYMNUM-1] = {}; // see above
+	char diag[SYMNUM-1];
+	char rdiag[SYMNUM-1];
+	char moves;
+	void countFeatures(char * row, int * features);
 
 public:
 	Board();
@@ -33,7 +33,7 @@ public:
 	bool isDone();
 	void getFeatures(int * features);
 	void getSuccessor(sym s,std::vector<Board> & v);
-	void setBoard(Board b);
+	//void setBoard(Board b);
 
 };
 
